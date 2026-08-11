@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ transaction_type }} | ManageCash{% endblock %}
+
+{% block content %}
+<div class="inner-page">
+    <div class="container py-5">
+        <div class="page-heading mb-4">
+            <span class="eyebrow">TRANSACTION</span>
+            <h1>{{ transaction_type }}</h1>
+            <p>{{ transaction_help }}</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
+                <div class="transaction-form-card">
+                    <div class="transaction-form-top">
+                        <div class="large-form-icon"><i class="bi {{ transaction_icon }}"></i></div>
+                        <div>
+                            <h4 class="mb-1">{{ transaction_type }}</h4>
+                            <p class="mb-0 text-muted">All fields are saved securely to your account.</p>
+                        </div>
+                    </div>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger border-0 rounded-4">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="row g-4">
+                            {% for field in form %}
+                            <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %}">
+                                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+                            <a href="{% url 'dashboard' %}" class="btn btn-light rounded-4 px-4">Cancel</a>
+                            <button class="btn btn-purple rounded-4 px-4" type="submit">
+                                <i class="bi bi-check2 me-1"></i> Save {{ transaction_type }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="form-tip mt-3">
+                    <i class="bi bi-lightbulb"></i>
+                    <div><strong>Tip:</strong> Add a clear description so you can understand your spending later.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

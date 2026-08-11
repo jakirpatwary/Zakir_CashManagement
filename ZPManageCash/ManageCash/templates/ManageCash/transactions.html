@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Transactions | ManageCash{% endblock %}
+
+{% block content %}
+<div class="inner-page">
+    <div class="container py-5">
+        <div class="page-heading d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div>
+                <span class="eyebrow">HISTORY</span>
+                <h1>Transactions</h1>
+                <p>Review every cash entry and expense in one place.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'add_cash' %}" class="btn btn-white-purple rounded-4">
+                    <i class="bi bi-plus-lg me-1"></i> Cash
+                </a>
+                <a href="{% url 'add_expense' %}" class="btn btn-dark-purple rounded-4">
+                    <i class="bi bi-plus-lg me-1"></i> Expense
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4"><div class="mini-summary"><span>Cash In</span><strong class="text-success">৳{{ cash_total|floatformat:2 }}</strong></div></div>
+            <div class="col-md-4"><div class="mini-summary"><span>Expenses</span><strong class="text-danger">৳{{ expense_total|floatformat:2 }}</strong></div></div>
+            <div class="col-md-4"><div class="mini-summary purple-summary"><span>Balance</span><strong>৳{{ balance|floatformat:2 }}</strong></div></div>
+        </div>
+
+        <div class="content-card p-0 overflow-hidden">
+            {% if rows %}
+            <div class="table-responsive">
+                <table class="table align-middle mb-0 transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Transaction</th>
+                            <th>Date & Time</th>
+                            <th class="text-end">Amount</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            <td>
+                                {% if row.kind == "cash" %}
+                                <span class="type-pill income-pill"><i class="bi bi-arrow-down-left"></i> Cash In</span>
+                                {% else %}
+                                <span class="type-pill expense-pill"><i class="bi bi-arrow-up-right"></i> Expense</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong>{{ row.label }}</strong>
+                                {% if row.description %}<div class="small text-muted">{{ row.description }}</div>{% endif %}
+                            </td>
+                            <td class="text-muted">{{ row.datetime|date:"d M Y, h:i A" }}</td>
+                            <td class="text-end fw-bold {% if row.kind == 'cash' %}text-success{% else %}text-danger{% endif %}">
+                                {% if row.kind == "cash" %}+{% else %}-{% endif %}৳{{ row.amount|floatformat:2 }}
+                            </td>
+                            <td class="text-end">
+                                <form method="post" action="{% if row.kind == 'cash' %}{% url 'delete_cash' row.id %}{% else %}{% url 'delete_expense' row.id %}{% endif %}"
+                                      onsubmit="return confirm('Delete this transaction?');">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-light rounded-3 text-danger" type="submit" title="Delete">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state py-5">
+                <i class="bi bi-receipt"></i>
+                <h5>No transactions yet</h5>
+                <p>Start by adding your first cash entry or expense.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

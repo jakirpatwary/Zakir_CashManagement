@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Profile | ManageCash{% endblock %}
+
+{% block content %}
+<div class="inner-page">
+    <div class="container py-5">
+        <div class="page-heading mb-4">
+            <span class="eyebrow">ACCOUNT</span>
+            <h1>Profile Management</h1>
+            <p>Keep your personal information up to date.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="profile-card">
+                    <div class="profile-avatar">{{ user.username|first|upper }}</div>
+                    <h4>{{ user.get_full_name|default:user.username }}</h4>
+                    <p class="text-muted mb-3">@{{ user.username }}</p>
+                    <span class="badge rounded-pill purple-badge">ManageCash Member</span>
+                    <hr>
+                    <div class="small text-muted">
+                        <i class="bi bi-calendar3 me-2"></i>
+                        Joined {{ user.date_joined|date:"d M Y" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="content-card">
+                    <div class="card-heading">
+                        <div>
+                            <h5>Personal Information</h5>
+                            <p>Update your name and email address.</p>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">First Name</label>
+                                {{ form.first_name }}
+                                {% for error in form.first_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Last Name</label>
+                                {{ form.last_name }}
+                                {% for error in form.last_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Email</label>
+                                {{ form.email }}
+                                {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="col-12">
+                                <div class="profile-readonly">
+                                    <i class="bi bi-person-badge"></i>
+                                    <div><small>Username</small><strong>{{ user.username }}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-purple rounded-4 px-4 mt-4" type="submit">
+                            <i class="bi bi-check2-circle me-1"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

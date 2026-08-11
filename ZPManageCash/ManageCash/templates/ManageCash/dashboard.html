@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | ManageCash{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="container py-4 py-lg-5">
+
+        <div class="dashboard-hero mb-4">
+            <div>
+                <span class="eyebrow"><i class="bi bi-stars me-1"></i> PERSONAL FINANCE</span>
+                <h1 class="display-6 fw-bold mt-2 mb-2">
+                    Hello, {{ user.first_name|default:user.username }}!
+                </h1>
+                <p class="mb-0">Here is your financial snapshot for today.</p>
+            </div>
+            <div class="hero-actions">
+                <a href="{% url 'add_cash' %}" class="btn btn-white-purple rounded-4">
+                    <i class="bi bi-plus-circle me-1"></i> Add Cash
+                </a>
+                <a href="{% url 'add_expense' %}" class="btn btn-dark-purple rounded-4">
+                    <i class="bi bi-arrow-up-right me-1"></i> Expense
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="metric-card metric-balance">
+                    <div class="metric-icon"><i class="bi bi-wallet2"></i></div>
+                    <div class="metric-label">Current Balance</div>
+                    <div class="metric-value">৳ {{ balance|floatformat:2 }}</div>
+                    <div class="metric-note"><i class="bi bi-pie-chart me-1"></i> Cash in minus expenses</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="metric-card">
+                    <div class="metric-icon green-icon"><i class="bi bi-arrow-down-left"></i></div>
+                    <div class="metric-label">Total Cash In</div>
+                    <div class="metric-value text-success">৳ {{ cash_total|floatformat:2 }}</div>
+                    <div class="metric-note">{{ cash_count }} cash transaction{{ cash_count|pluralize }}</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="metric-card">
+                    <div class="metric-icon red-icon"><i class="bi bi-arrow-up-right"></i></div>
+                    <div class="metric-label">Total Expenses</div>
+                    <div class="metric-value text-danger">৳ {{ expense_total|floatformat:2 }}</div>
+                    <div class="metric-note">{{ expense_count }} expense transaction{{ expense_count|pluralize }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="content-card h-100">
+                    <div class="card-heading">
+                        <div>
+                            <h5>Recent Cash In</h5>
+                            <p>Latest income entries</p>
+                        </div>
+                        <a href="{% url 'add_cash' %}" class="small purple-link fw-semibold">+ Add</a>
+                    </div>
+
+                    {% if recent_cash %}
+                    <div class="transaction-list">
+                        {% for item in recent_cash %}
+                        <div class="transaction-row">
+                            <div class="transaction-symbol income-symbol"><i class="bi bi-arrow-down-left"></i></div>
+                            <div class="flex-grow-1">
+                                <strong>{{ item.source }}</strong>
+                                <div class="small text-muted">{{ item.datetime|date:"d M Y, h:i A" }}</div>
+                            </div>
+                            <div class="text-end">
+                                <strong class="text-success">+৳{{ item.amount|floatformat:2 }}</strong>
+                                {% if item.description %}
+                                <div class="small text-muted text-truncate transaction-note">{{ item.description }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-cash-stack"></i>
+                        <p>No cash entries yet.</p>
+                        <a href="{% url 'add_cash' %}" class="purple-link">Add your first cash entry</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="content-card h-100">
+                    <div class="card-heading">
+                        <div>
+                            <h5>Recent Expenses</h5>
+                            <p>Latest spending</p>
+                        </div>
+                        <a href="{% url 'add_expense' %}" class="small purple-link fw-semibold">+ Add</a>
+                    </div>
+
+                    {% if recent_expenses %}
+                    <div class="transaction-list">
+                        {% for item in recent_expenses %}
+                        <div class="transaction-row">
+                            <div class="transaction-symbol expense-symbol"><i class="bi bi-arrow-up-right"></i></div>
+                            <div class="flex-grow-1">
+                                <strong>{{ item.description }}</strong>
+                                <div class="small text-muted">{{ item.datetime|date:"d M Y, h:i A" }}</div>
+                            </div>
+                            <strong class="text-danger">-৳{{ item.amount|floatformat:2 }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-receipt"></i>
+                        <p>No expenses yet.</p>
+                        <a href="{% url 'add_expense' %}" class="purple-link">Record an expense</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions mt-4">
+            <a href="{% url 'transactions' %}">
+                <span><i class="bi bi-list-ul"></i></span>
+                <div><strong>All Transactions</strong><small>View complete history</small></div>
+                <i class="bi bi-chevron-right ms-auto"></i>
+            </a>
+            <a href="{% url 'profile' %}">
+                <span><i class="bi bi-person-gear"></i></span>
+                <div><strong>Profile Settings</strong><small>Update your account</small></div>
+                <i class="bi bi-chevron-right ms-auto"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
