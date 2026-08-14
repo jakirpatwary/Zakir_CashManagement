@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Add Food · CalorieTrack{% endblock %}{% block content %}
+<div class="heading row"><div><small class="overline">DAILY LOG</small><h1>Add food</h1><p>Record what you eat to keep today's total accurate.</p></div><a class="btn light" href="{% url 'dashboard' %}">← Dashboard</a></div>
+<div class="panel food-panel"><div class="food-head"><div class="circle orange">✦</div><div><h2>What did you eat?</h2><p>Enter the food name and calorie amount.</p></div></div>
+<form method="post">{% csrf_token %}{% for field in form %}<div class="field"><label>{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endfor %}<button class="btn primary full">Add to today's log ＋</button></form></div>
+{% endblock %}

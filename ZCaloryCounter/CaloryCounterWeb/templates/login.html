@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Sign In · CalorieTrack{% endblock %}{% block content %}
+<div class="auth-wrap"><div class="auth-card"><div class="auth-logo">CT</div><small class="overline">WELCOME BACK</small><h1>Sign in to your account</h1><p class="sub">Track your calories, understand your needs, and stay consistent.</p>
+<form method="post">{% csrf_token %}{{ form.non_field_errors }}<label>Username</label>{{ form.username }}{{ form.username.errors }}<label>Password</label>{{ form.password }}{{ form.password.errors }}<button class="btn primary full">Sign In <span>→</span></button></form>
+<p class="auth-foot">New here? <a href="{% url 'register' %}">Create an account</a></p></div></div>{% endblock %}

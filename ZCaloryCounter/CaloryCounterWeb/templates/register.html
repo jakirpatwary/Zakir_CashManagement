@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Create Account · CalorieTrack{% endblock %}{% block content %}
+<div class="auth-wrap"><div class="auth-card"><div class="auth-logo">CT</div><small class="overline">GET STARTED</small><h1>Create your account</h1><p class="sub">A simple, professional way to understand and track your daily calories.</p>
+<form method="post">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}<label>{{ field.label }}</label>{{ field }}{{ field.errors }}{% endfor %}<button class="btn primary full">Create Account <span>→</span></button></form>
+<p class="auth-foot">Already registered? <a href="{% url 'login' %}">Sign in</a></p></div></div>{% endblock %}

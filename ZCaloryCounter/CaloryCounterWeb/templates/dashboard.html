@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Dashboard · CalorieTrack{% endblock %}{% block content %}
+<div class="heading row"><div><small class="overline">YOUR DAILY OVERVIEW</small><h1>Good day, {{ profile.name }} 👋</h1><p>Here is your calorie summary for today.</p></div><a class="btn primary" href="{% url 'add_calorie' %}">＋ Add Food</a></div>
+<div class="stats">
+<div class="stat"><div class="stat-label"><b>◉</b> DAILY TARGET</div><strong>{{ required|floatformat:0 }}</strong><em>kcal</em><p>Estimated daily requirement</p></div>
+<div class="stat"><div class="stat-label"><b class="orange">◒</b> CONSUMED</div><strong>{{ consumed }}</strong><em>kcal</em><p>Food logged today</p></div>
+<div class="stat"><div class="stat-label"><b class="blue">◷</b> REMAINING</div><strong>{{ remaining|floatformat:0 }}</strong><em>kcal</em><p>Available from your target</p></div>
+</div>
+<div class="dash-grid"><section class="panel"><div class="section-head"><div><h2>Today's food</h2><p>Your recent calorie entries</p></div><a href="{% url 'add_calorie' %}">＋ Add entry</a></div>
+{% if entries %}<div class="table-wrap"><table><thead><tr><th>FOOD</th><th>CALORIES</th><th>TIME</th><th></th></tr></thead><tbody>{% for entry in entries %}<tr><td><b class="food-dot">●</b> {{ entry.item_name }}</td><td><strong>{{ entry.calories }} kcal</strong></td><td class="muted">{{ entry.consumed_at|date:"H:i" }}</td><td><form method="post" action="{% url 'delete_calorie' entry.pk %}">{% csrf_token %}<button class="delete" title="Delete">×</button></form></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty"><div>🍽️</div><h3>No food logged yet</h3><p>Add your first meal to start tracking.</p><a class="btn light" href="{% url 'add_calorie' %}">Add first food</a></div>{% endif %}</section>
+<aside class="panel guide"><div class="section-head"><div><h2>Goal guide</h2><p>Simple daily targets</p></div><b class="guide-icon">↗</b></div>
+<div class="goal"><span><i></i>Maintain</span><strong>{{ required|floatformat:0 }} kcal</strong></div><div class="goal"><span><i></i>Lose weight</span><strong>{{ lose_calories|floatformat:0 }} kcal</strong></div><div class="goal"><span><i></i>Gain weight</span><strong>{{ gain_calories|floatformat:0 }} kcal</strong></div>
+<div class="tip"><b>Helpful note</b><p>These calculations are educational estimates and are not medical advice.</p></div></aside></div>
+<div class="profile-strip"><span>Profile · {{ profile.age }} years · {{ profile.height_cm }} cm · {{ profile.weight_kg }} kg</span><a href="{% url 'profile' %}">Update profile →</a></div>
+{% endblock %}

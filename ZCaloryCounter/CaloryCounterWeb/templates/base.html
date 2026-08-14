@@ -1,0 +1,23 @@
+{% load static %}
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}CalorieTrack{% endblock %}</title><link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head><body>
+<div class="app">
+<aside class="sidebar">
+<a class="logo" href="{% url 'dashboard' %}"><b>CT</b><span>Calorie<span>Track</span></span></a>
+{% if user.is_authenticated %}
+<p class="nav-title">WORKSPACE</p>
+<a class="nav active" href="{% url 'dashboard' %}">⌂ <span>Dashboard</span></a>
+<a class="nav" href="{% url 'add_calorie' %}">＋ <span>Add Food</span></a>
+<a class="nav" href="{% url 'profile' %}">◎ <span>My Profile</span></a>
+<div class="sidebar-bottom"><div class="user-box"><div class="avatar">{{ user.username|first|upper }}</div><div><b>{{ user.username }}</b><small>Personal account</small></div></div><a class="nav" href="{% url 'logout' %}">↪ <span>Logout</span></a></div>
+{% else %}
+<p class="nav-title">ACCOUNT</p><a class="nav active" href="{% url 'login' %}">→ <span>Sign In</span></a><a class="nav" href="{% url 'register' %}">＋ <span>Create Account</span></a>
+{% endif %}
+</aside>
+<section class="main">
+<header class="topbar"><div class="mobile-logo">CT CalorieTrack</div>{% if user.is_authenticated %}<div class="top-user"><span>Daily wellness companion</span><a href="{% url 'profile' %}"><i>{{ user.username|first|upper }}</i>{{ user.username }}</a></div>{% endif %}</header>
+<main class="content">{% for message in messages %}<div class="alert">✓ {{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer>CalorieTrack · Personal nutrition dashboard</footer>
+</section></div></body></html>
